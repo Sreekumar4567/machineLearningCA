@@ -14,16 +14,18 @@ shinyServer(function(input, output) {
     
     file1 <- input$file
     if(is.null(file1)){return()} 
- df<- read.csv(file1$datapath, header=TRUE, sep=',')
+      df<- read.csv(file1$datapath, header=TRUE, sep=',')
     
-  })
+    })
   
   
-  output$table <- renderDataTable({
+   output$table <- renderDataTable({
+    
     if(is.null(data())){return()}
     
     testing<-data()
-    hr<-hrNew
+
+    hr <- read.csv(file="./HR_comma_sep.csv", header=TRUE, sep=",")
     hr_leaving_people <- hr %>% filter(left==1)
     hr_good_leaving_people <- hr_leaving_people %>% filter(last_evaluation >= 0.70 | time_spend_company >= 4 | number_project > 5)
     hr_good_leaving_people2 <- hr %>% filter(last_evaluation >= 0.70 | time_spend_company >= 4 | number_project > 5)
@@ -48,6 +50,7 @@ shinyServer(function(input, output) {
     # testing  <- hr_model[-inTraining,]
     # Estimate the drivers of attrition
     logreg = glm(left ~ ., family=binomial(logit), data=training)
+    
     # Make predictions on the out-of-sample data
     probaToLeave=predict(logreg,newdata=testing,type="response")
     # Structure the prediction output in a table
@@ -64,9 +67,11 @@ shinyServer(function(input, output) {
       dplyr::select(probaToLeave, performance, priority,ID) %>%
       dplyr::group_by(probaToLeave, performance,priority,ID) %>%
       dplyr::summarise_each(funs())
+
   })
-  #this is to download the predicted table shown in the UI.
-  output$downloadtable <- downloadHandler(
+
+  
+    output$downloadtable <- downloadHandler(
     filename = function() {
       paste('stats', '.csv', sep='')
     },
@@ -81,7 +86,7 @@ shinyServer(function(input, output) {
         ))  
       
       write.csv(df2, file)
-    }
-  )
+      }
+    )
   
 })
