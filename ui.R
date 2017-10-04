@@ -15,9 +15,9 @@ shinyUI(fluidPage(
   
   sidebarLayout(
     sidebarPanel(fileInput("file","Upload the survey results"), 
-                 width =2),
+                 width =4),
     mainPanel(
-      width = 10,
+      width = 6,
       dataTableOutput("table"),
       downloadButton("downloadtable", "Download the table"),
       tags$br(),
