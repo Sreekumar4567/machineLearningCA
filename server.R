@@ -23,7 +23,7 @@ shinyServer(function(input, output) {
     if(is.null(data())){return()}
     
     testing<-data()
-    hr<-HR_comma_sep
+    hr <- read.csv(file="./HR_comma_sep.csv", header=TRUE, sep=",")
     hr_leaving_people <- hr %>% filter(left==1)
     hr_good_leaving_people <- hr_leaving_people %>% filter(last_evaluation >= 0.70 | time_spend_company >= 4 | number_project > 5)
     hr_good_leaving_people2 <- hr %>% filter(last_evaluation >= 0.70 | time_spend_company >= 4 | number_project > 5)
