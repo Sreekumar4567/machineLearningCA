@@ -14,12 +14,13 @@ shinyServer(function(input, output) {
     
     file1 <- input$file
     if(is.null(file1)){return()} 
- df<- read.csv(file1$datapath, header=TRUE, sep=',')
+      df<- read.csv(file1$datapath, header=TRUE, sep=',')
     
-  })
+    })
   
   
-  output$table <- renderDataTable({
+   output$table <- renderDataTable({
+    
     if(is.null(data())){return()}
     
     testing<-data()
@@ -48,6 +49,7 @@ shinyServer(function(input, output) {
     # testing  <- hr_model[-inTraining,]
     # Estimate the drivers of attrition
     logreg = glm(left ~ ., family=binomial(logit), data=training)
+    
     # Make predictions on the out-of-sample data
     probaToLeave=predict(logreg,newdata=testing,type="response")
     # Structure the prediction output in a table
@@ -64,9 +66,9 @@ shinyServer(function(input, output) {
       dplyr::select(probaToLeave, performance, priority) %>%
       dplyr::group_by(probaToLeave, performance,priority) %>%
       dplyr::summarise_each(funs())
-  })
+    })
   
-  output$downloadtable <- downloadHandler(
+    output$downloadtable <- downloadHandler(
     filename = function() {
       paste('stats', '.csv', sep='')
     },
@@ -81,7 +83,7 @@ shinyServer(function(input, output) {
         ))  
       
       write.csv(df2, file)
-    }
-  )
+      }
+    )
   
 })
