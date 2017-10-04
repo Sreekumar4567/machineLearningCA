@@ -66,5 +66,22 @@ shinyServer(function(input, output) {
       dplyr::summarise_each(funs())
   })
   
+  output$downloadtable <- downloadHandler(
+    filename = function() {
+      paste('stats', '.csv', sep='')
+    },
+    content = function(file) {
+      df1 <- data()
+      
+      df2 <- df1 %>% 
+        dplyr::select(satisfaction_level, salary, promotion_last_5years) %>% 
+        dplyr::group_by(satisfaction_level, salary) %>%
+        dplyr::summarise_each(funs(
+          
+        ))  
+      
+      write.csv(df2, file)
+    }
+  )
   
 })
