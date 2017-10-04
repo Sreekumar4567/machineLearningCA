@@ -23,7 +23,7 @@ shinyServer(function(input, output) {
     if(is.null(data())){return()}
     
     testing<-data()
-    hr<-HR_comma_sep
+    hr<-hrNew
     hr_leaving_people <- hr %>% filter(left==1)
     hr_good_leaving_people <- hr_leaving_people %>% filter(last_evaluation >= 0.70 | time_spend_company >= 4 | number_project > 5)
     hr_good_leaving_people2 <- hr %>% filter(last_evaluation >= 0.70 | time_spend_company >= 4 | number_project > 5)
@@ -54,18 +54,18 @@ shinyServer(function(input, output) {
     predattrition = data.frame(probaToLeave)
     # Add a column to the predattrition dataframe containing the performance
     predattrition$performance=testing$last_evaluation
-
-  
+    predattrition$ID=testing$employeeID
     predattrition$priority=predattrition$performance*predattrition$probaToLeave
+    
     orderpredattrition=predattrition[order(predattrition$priority,decreasing = TRUE),]
     orderpredattrition <- head(orderpredattrition,n=300)
-    
+#this is to render the prediction table on the UI once the prediction algorithm has been completed.
     df2 <- orderpredattrition %>%
-      dplyr::select(probaToLeave, performance, priority) %>%
-      dplyr::group_by(probaToLeave, performance,priority) %>%
+      dplyr::select(probaToLeave, performance, priority,ID) %>%
+      dplyr::group_by(probaToLeave, performance,priority,ID) %>%
       dplyr::summarise_each(funs())
   })
-  
+  #this is to download the predicted table shown in the UI.
   output$downloadtable <- downloadHandler(
     filename = function() {
       paste('stats', '.csv', sep='')
