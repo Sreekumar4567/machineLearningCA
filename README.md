@@ -1,4 +1,4 @@
-# CA instructions 
+# Project instructions 
 
 Run the selectingAlgorithm.rmd file to understand the data and why we selected logical regression algorithm 
 
